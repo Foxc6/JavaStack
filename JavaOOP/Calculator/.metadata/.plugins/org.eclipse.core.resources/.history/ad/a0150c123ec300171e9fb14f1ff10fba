@@ -1,0 +1,7 @@
+
+public class Calculator {
+	public int setOperandOne(int operandOnd) {
+		
+	}
+	
+}

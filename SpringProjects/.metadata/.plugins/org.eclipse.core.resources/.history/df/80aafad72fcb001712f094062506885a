@@ -1,0 +1,10 @@
+package com.example.loginregistration.controllers;
+
+@Controller
+public class DashboardController {
+	@RequestMapping("/dashboard")
+	public String home() {
+		return "dashboard.jsp";
+	}
+
+}

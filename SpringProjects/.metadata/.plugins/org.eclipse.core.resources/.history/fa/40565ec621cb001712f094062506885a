@@ -1,0 +1,15 @@
+package com.example.loginregistration.models;
+
+import javax.persistence.Entity;
+
+@Entity
+public class User {
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	private String firstName;
+	private String lastName;
+	private int age;
+
+}

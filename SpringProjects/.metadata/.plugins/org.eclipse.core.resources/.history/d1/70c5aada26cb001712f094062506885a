@@ -1,0 +1,43 @@
+package com.example.loginregistration.controllers;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.example.loginregistration.models.User;
+
+@Controller
+public class MainController {
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		dateFormat.setLenient(false)
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+	}
+	
+	@RequestMapping("/")
+	public String home(@ModelAttribute("user") User user) {
+		return "index.jsp";
+	}
+	
+	@PostMapping("/register/user")
+	public String userHandler(@Valid @ModelAttribute("user") User user, BindingResult result) {
+		if(result.hasErrors()) {
+			return "index.jsp";
+		} else {
+			System.out.println(user);
+			return "redirect:/";
+		}
+	}
+
+}

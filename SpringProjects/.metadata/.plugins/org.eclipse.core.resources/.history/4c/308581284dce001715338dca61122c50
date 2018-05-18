@@ -1,0 +1,59 @@
+package com.example.assignment2.controllers;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.example.assignment2.models.Idea;
+import com.example.assignment2.models.User;
+import com.example.assignment2.models.UsersIdeas;
+import com.example.assignment2.services.IdeaService;
+import com.example.assignment2.services.UserService;
+
+@Controller
+public class Ideas {
+	private final IdeaService ideaService;
+	private final UserService userService;
+	
+	public Ideas(IdeaService ideaService, UserService userService) {
+		this.ideaService = ideaService;
+		this.userService = userService;
+	}
+	
+	@RequestMapping("/bright_ideas")
+	public String getIdeas(HttpSession session, @ModelAttribute("idea") Idea idea, Model model, @ModelAttribute("userIdeas") UsersIdeas userLikes) {
+		model.addAttribute("ideas", ideaService.getAll());
+		User user =  userService.findUserById((long) session.getAttribute("user_id"));
+		// System.out.println(user);
+		model.addAttribute("userName", user.getName());
+//		System.out.println(idea);
+//		System.out.println(idea.getId());
+		//Long likeCount = ideaService.countByIdeaId(idea);
+		//model.addAttribute("likeCount", likeCount);
+		if(session.getAttribute("user_id") == null) {
+			return "redirect:/";
+		}
+		return "bright_ideas.jsp";
+	}
+	
+	@RequestMapping("/add_idea")
+	public String addIdea(@Valid @ModelAttribute("idea") Idea idea, HttpSession session, BindingResult result, Model model) {
+		ideaService.createIdea(idea, session);
+//		System.out.println(idea);
+//		System.out.println(idea.getId());
+		return "redirect:/bright_ideas";
+	}
+	
+	@RequestMapping("/addLike")
+	public String addLike(@Valid @ModelAttribute("userLike") UsersIdeas userLike, HttpSession session) {
+		// System.out.println("Like Button is triggering addLike method");
+		ideaService.addLike(userLike, session);
+		return "redirect:/bright_ideas";
+	}
+
+}

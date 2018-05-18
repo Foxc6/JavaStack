@@ -1,0 +1,106 @@
+package com.example.relationships.controllers;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.example.relationships.models.License;
+import com.example.relationships.models.Person;
+import com.example.relationships.services.LicenseService;
+import com.example.relationships.services.PersonService;
+
+@Controller
+public class Persons {
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+	}
+	
+	
+	private final PersonService personService;
+	private final LicenseService licenseService;
+
+	public Persons(PersonService personService, LicenseService licenseService) {
+		this.personService = personService;
+		this.licenseService = licenseService;
+	}
+
+
+	// Show One Person Route
+	@RequestMapping("/persons/{id}")
+	public String findPersonById(Model model, @PathVariable("id") Long id) {
+		Person person = personService.findPersonById(id);
+		model.addAttribute("person", person);
+		return "showPerson";
+	}
+
+	// GET ROUTE Add New Person
+	@RequestMapping("/persons/new")
+	public String newPerson(@ModelAttribute("person") Person person) {
+		return "newPerson";
+	}
+
+	// POST ROUTE Add New Person
+	@PostMapping("/persons/new")
+	public String createPerson(@Valid @ModelAttribute("person") Person person, BindingResult result) {
+		if (result.hasErrors()) {
+			return "newPerson";
+		} else {
+			personService.addPerson(person);
+			return "redirect:/persons/new";
+		}
+	}
+	
+	// GET ROUTE Add New License
+//    @RequestMapping("/licenses/new")
+//    public String newLicense(@ModelAttribute("license") License license, Model model) {
+//    		model.addAttribute("persons", personService.allPersons());
+//        return "newLicense";
+//    }
+	
+	@RequestMapping("/licenses/new")
+	public String newLicense(@ModelAttribute License license, Model model) {
+		model.addAttribute("persons", personService.allPersons());
+		return "newLicense";
+	}
+    
+    // POST ROUTE Add New License
+//    @PostMapping("/licenses/new")
+//    public String createLicense(@Valid @ModelAttribute("license") License license, BindingResult result) {
+//        if (result.hasErrors()) {
+//            return "newLicense";
+//        }else{
+//        		licenseService.addLicense(license);
+//            return "redirect:/newLicense";
+//        }
+//    }
+    
+    @RequestMapping(method=RequestMethod.POST)
+	public String createLicense(@Valid @ModelAttribute License license, BindingResult result, Model model) {
+		if(result.hasErrors()) {
+			model.addAttribute("persons", personService.allPersons());
+			return "/licenses/new";
+		} else {
+			License newLicense = licenseService.addLicense(license);
+			//System.out.println("NEW LICENSE IS : " + newLicense);
+			String person_id = Long.toString(newLicense.getPerson().getId());
+			//System.out.println("PERSON ID IS : " + person_id);
+			return "redirect:/persons/".concat(person_id);
+		}
+	}
+}

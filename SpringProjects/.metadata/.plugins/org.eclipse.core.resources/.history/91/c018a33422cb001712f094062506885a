@@ -1,0 +1,38 @@
+package com.example.loginregistration.models;
+
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
+public class User {
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	private String firstName;
+	private String lastName;
+	private int age;
+	private String email;
+	private String password;
+	private Date birthday;
+	
+	private Date createdAt;
+	private Date updatedAt;
+	
+	public User(Long id, String firstName, String lastName, int age, String email, String password, Date birthday) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.age = age;
+		this.email = email;
+		this.password = password;
+		this.birthday = birthday;
+	}
+	
+	
+
+}

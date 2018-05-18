@@ -1,0 +1,11 @@
+package com.example.assignment4.repositories;
+
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+
+@Repository
+public interface PotentialFriendsRepository extends CrudRepository<PotentialFriends, Long>{
+	Long countByUser_id(Long id);
+
+}

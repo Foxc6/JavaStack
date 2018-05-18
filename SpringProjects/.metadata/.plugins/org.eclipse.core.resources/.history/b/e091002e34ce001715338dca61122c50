@@ -1,0 +1,40 @@
+package com.example.assignment2.services;
+
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Service;
+
+import com.example.assignment2.models.Idea;
+import com.example.assignment2.models.User;
+import com.example.assignment2.repositories.IdeaRepository;
+import com.example.assignment2.repositories.UserRepository;
+
+@Service
+public class IdeaService {
+	private final IdeaRepository ideaRepository;
+	private final UserRepository userRepository;
+	
+	public IdeaService(IdeaRepository ideaRepository, UserRepository userRepository) {
+		this.ideaRepository = ideaRepository;
+		this.userRepository = userRepository;
+		
+	}
+	
+	public Idea createIdea(Idea idea, HttpSession session) {
+		List<User> users = idea.getUsers();
+		System.out.println(users);
+		// idea.setUsers(users.add(userRepository.findUserById((long) session.getAttribute("user_id"))));
+		return ideaRepository.save(idea);
+	}
+	
+	public List<Idea> getAll() {
+		return ideaRepository.findAll();
+	}
+	
+	public Idea getIdea(Long id) {
+		return ideaRepository.findOne(id);
+	}
+
+}

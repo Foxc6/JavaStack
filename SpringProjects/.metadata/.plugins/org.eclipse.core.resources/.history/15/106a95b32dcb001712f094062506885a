@@ -1,0 +1,33 @@
+package com.example.loginregistration.services;
+
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Service;
+
+import com.example.loginregistration.models.User;
+import com.example.loginregistration.repositories.UserRepository;
+
+@Service
+public class UserService {
+	private final UserRepository userRepository;
+	
+	public UserService(UserRepository userRepository) {
+		super();
+		this.userRepository = userRepository;
+	}
+	
+	public String saveUser(User user, String c_password) {
+		if(!user.getPassword().equals(c_password)) {
+			System.out.println("Password don't match!");
+			return "Password don't match!";
+		} 
+		System.out.println(userRepository.findByEmail(user.getEmail()).equals(null));
+		if(userRepository.findByEmail(user.getEmail()).equals(null)) {
+			user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10)));
+			userRepository.save(user);
+			return "Success!";
+		} else {
+			return "An account with that email already exists!";
+		}
+	}
+
+}

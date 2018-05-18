@@ -1,0 +1,49 @@
+package com.example.assignment4.models;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+
+import com.example.assignment4.models.User;
+
+@Entity
+@Table(name="potential_friends")
+public class PotentialFriends {
+    @Id
+    @GeneratedValue
+    private Long id;
+    
+	@Column(updatable=false)
+	private Date createdAt;
+ 	private Date updatedAt;
+    
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_id")
+	private User user;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="potential_friend_id")
+	private User potential_friend;
+	
+	public PotentialFriends() {
+	}
+	
+	@PrePersist
+    protected void onCreate(){
+        this.createdAt = new Date();
+    }
+    @PreUpdate
+    protected void onUpdate(){
+        this.updatedAt = new Date();
+    }
+}

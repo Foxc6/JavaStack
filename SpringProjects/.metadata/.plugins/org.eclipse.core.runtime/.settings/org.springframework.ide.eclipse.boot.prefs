@@ -1,0 +1,17 @@
+eclipse.preferences.version=1
+org.springframework.ide.eclipse.boot.wizard.PopularityTracker.data-jpa=16
+org.springframework.ide.eclipse.boot.wizard.PopularityTracker.devtools=29
+org.springframework.ide.eclipse.boot.wizard.PopularityTracker.mysql=16
+org.springframework.ide.eclipse.boot.wizard.PopularityTracker.web=31
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.artifactId=assignment4
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.bootVersion=1.5.8.RELEASE
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.description=Assignment Four Project
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.groupId=com.example.assignment4
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.javaVersion=1.8
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.language=java
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.name=assignment4
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.packageName=com.example.assignment4
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.packaging=jar
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.type=MAVEN
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.version=0.0.1-SNAPSHOT
+org.springframework.ide.eclipse.boot.wizard.initializr.url=http\://start.spring.io\n

@@ -1,0 +1,5 @@
+package com.example.dojoandninjas.repositories;
+
+public class DojoRepository {
+
+}

@@ -1,0 +1,49 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="/css/style.css" />
+<title>Login Registration</title>
+</head>
+<body>
+	<a href="/logout">Logout</a>
+	<a href="/allUsers">All Users</a>
+	<div class="container">
+		<h2>Hi ${user.name}!</h2>
+		
+		<p>Description: ${user.description}!</p>
+		
+		<p>Your Professional Network:</p>
+		<table style="width: 300px">
+			<tr>
+				<th>Name</th>
+				<th>Action</th>
+			</tr>
+			<c:forEach var="potentialFriend" items="${potentialFriends}">
+			<tr>
+				<td><a href="users/${potentialFriend.id}">${potentialFriend}</a></td>
+				
+				
+				<%-- <td><form:form action="/addFriend" method="POST" modelAttribute="friend">
+					<form:hidden path="friend" value="${user.id}"></form:hidden>
+					<input type="submit" value="Accept" />
+				</form:form></td> --%>
+				
+				<%-- <td><form:form action="/sendRequest" method="POST" modelAttribute="potentialFriend">
+					<form:hidden path="potential_friend" value="${user.id}"></form:hidden>
+					<input type="submit" value="Ignore" />
+				</form:form></td> --%>
+			</tr>
+			</c:forEach>
+		</table>
+		
+		
+		
+		<h3>Invitations:</h3>
+		<p>The following people asked to be your network:</p>
+		
+	</div>
+</body>
+</html>

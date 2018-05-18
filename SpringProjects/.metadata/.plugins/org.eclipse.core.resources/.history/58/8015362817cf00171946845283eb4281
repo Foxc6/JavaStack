@@ -1,0 +1,28 @@
+package com.example.assignment3.services;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.assignment3.models.Course;
+import com.example.assignment3.models.User;
+
+@Service
+public class CourseService {
+
+	private final SemesterRepository semesterRepository;
+
+	public SemesterService(SemesterRepository semesterRepository) {
+		super();
+		this.semesterRepository = semesterRepository;
+	}
+
+	public User findUserById(Long id) {
+		return semesterRepository.findOne(id);
+	}
+	
+	public List<Course> getAll() {
+		return semesterRepository.findAll();
+	}
+
+}

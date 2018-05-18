@@ -1,0 +1,70 @@
+package com.example.assignment3.models;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+@Entity
+public class User {
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	@NotNull
+	@Min(2)
+	private String name;
+	
+	@NotNull
+	@Min(7)
+	private String email;
+	
+	@NotNull
+	@Min(8)
+	private String password;
+	
+	@Column(updatable=false)
+    @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
+    private Date createdAt;
+    
+    @Column
+    @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
+    private Date updatedAt;
+    
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "users_courses", 
+        joinColumns = @JoinColumn(name = "user_id"), 
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> courses; 
+	
+	public User() {
+		
+	}
+	
+	@PrePersist
+    protected void onCreate(){
+        this.createdAt = new Date();
+    }
+    @PreUpdate
+    protected void onUpdate(){
+        this.updatedAt = new Date();
+    }
+
+	
+}

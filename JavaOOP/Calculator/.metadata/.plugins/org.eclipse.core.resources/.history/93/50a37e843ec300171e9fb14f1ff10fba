@@ -1,0 +1,19 @@
+
+public class Calculator {
+	public int setOperandOne(int operandOnd) {
+		return operandOnd;
+	}
+	
+	public int setOperandTwo(int operandTwo) {
+		return operandTwo;
+	}
+	
+	public String setOperation(String operation) {
+		return operation;
+	}
+	
+	public int performOperation(){
+		return this.setOperandOne(int);
+	}
+	
+}

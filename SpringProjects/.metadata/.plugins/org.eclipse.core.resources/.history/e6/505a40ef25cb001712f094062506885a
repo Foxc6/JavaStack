@@ -1,0 +1,27 @@
+package com.example.loginregistration.controllers;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.example.loginregistration.models.User;
+
+@Controller
+public class MainController {
+	
+	@RequestMapping("/")
+	public String home(@ModelAttribute("user") User user) {
+		return "index.jsp";
+	}
+	
+	@PostMapping("/register/user")
+	public String userHandler(@Valid @ModelAttrivute("user") User user, BindingResult result) {
+		if(result.hasErrors()) {
+			return "index.jsp";
+		} else {
+			System.out.println(user);
+			return "redirect:/";
+		}
+	}
+
+}

@@ -1,0 +1,8 @@
+INDEX VERSION 1.4+/Users/chris/Documents/School/CodingDojo/JavaStack/SpringProjects/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+3605878491.index
+2684570336.index
+2730866660.index
+500321936.index
+1418916925.index
+1725389960.index
+450655388.index

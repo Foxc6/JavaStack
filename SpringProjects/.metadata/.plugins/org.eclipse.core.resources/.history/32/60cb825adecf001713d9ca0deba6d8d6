@@ -1,0 +1,154 @@
+package com.example.assignment4.controllers;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.assignment4.models.Friends;
+import com.example.assignment4.models.PotentialFriends;
+import com.example.assignment4.models.User;
+import com.example.assignment4.services.UserService;
+
+@Controller
+public class Users {
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+	}
+	
+	private final UserService userService;
+	
+	public Users(UserService userService) {
+		this.userService = userService;
+	}
+	
+	@RequestMapping("/")
+	public String home(@ModelAttribute("user") User user) {
+		System.out.println("home Method being hit");
+		return "index.jsp";
+	}
+	
+	@PostMapping("/register/user")
+	public String userHandler(@RequestParam("c_password") String c_password, @Valid @ModelAttribute("user") User user, BindingResult result, HttpSession session) {
+//		System.out.println("Register method is being hit in Users Controller");
+//		System.out.println(session.getAttribute("user_id"));
+//		System.out.println(result);
+		if(result.hasErrors() || session.getAttribute("user_id") != null) {
+			return "redirect:/";
+		} else {
+			System.out.println(session.getAttribute("user_id"));
+			// System.out.println(user);
+			userService.saveUser(user, c_password, session);
+			if(session.getAttribute("user_id") != null) {
+				return "redirect:/allUsers";
+			} else {
+				return "index.jsp";
+			}
+		}
+	}
+	
+	@RequestMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
+	}
+	
+	@RequestMapping("/login/user")
+	public String loginUser(@RequestParam("email") String email, @RequestParam("password") String password, HttpSession session) {
+		if(userService.login(email, password, session)) {
+			return "redirect:/allUsers";
+		}
+		return "redirect:/";
+	}
+	
+	@RequestMapping("/users/{UserId}")
+	public String showUser(Model model, @PathVariable("UserId") Long UserId, HttpSession session) {
+		// First make sure that a user is logged in to view page
+		if(session.getAttribute("user_id") == null) {
+			return "redirect:/";
+		}
+		
+		User currentUser = userService.findUserById((long) session.getAttribute("user_id"));
+		model.addAttribute("currentUser", currentUser);
+				
+		User user = userService.findUserById(UserId);
+		model.addAttribute("user", user);
+		
+		return "showUser.jsp";
+	}
+	
+	@RequestMapping("/allUsers")
+	public String getUsers(HttpSession session, Model model, @ModelAttribute("potentialFriend") PotentialFriends potentialFriend) {
+		List<User> users = userService.getAllUsers();
+		if(session.getAttribute("user_id") == null) {
+			return "redirect:/";
+		}
+		
+		// Get currently logged-in User
+		User currentUser =  userService.findUserById((long) session.getAttribute("user_id"));
+		model.addAttribute("userName", currentUser.getName());
+		model.addAttribute("currentUser", currentUser);
+		model.addAttribute("users", users);
+		
+		return "allUsers.jsp";
+	}
+	
+	@RequestMapping("/professionalProfile")
+	public String showCurrentUser(Model model, HttpSession session, @ModelAttribute("potentialFriend") PotentialFriends potentialFriend) {
+		// First make sure that a user is logged in to view page
+		if(session.getAttribute("user_id") == null) {
+			return "redirect:/";
+		}
+		List<PotentialFriends> potentialFriends = userService.getAllPotentialFriends();
+		
+		User user = userService.findUserById((long) session.getAttribute("user_id"));
+		model.addAttribute("user", user);
+		model.addAttribute("potentialFriends", potentialFriends);
+		
+		
+		return "professionalProfile.jsp";
+	}
+	
+//	@RequestMapping("/sendRequest")
+//	public String sendRequest(@Valid @ModelAttribute("potentialFriend") PotentialFriends potentialFriend, HttpSession session) {
+//		//System.out.println(potentialFriends);
+////		User user = userService.findUserById((long) session.getAttribute("user_id"));
+//		userService.sendRequest(potentialFriend, session);
+//		return "redirect:/bright_ideas";
+//	}
+	
+	@RequestMapping("/sendRequest")
+	public String sendRequest(@Valid @ModelAttribute("potentialFriend") PotentialFriends potentialFriend, HttpSession session) {
+		System.out.println(potentialFriend);
+		userService.sendRequest(potentialFriend, session);
+		return "redirect:/allUsers";
+	}
+	
+	@RequestMapping("/addFriend")
+	public String addFriend(@Valid @ModelAttribute("friend") Friends friend, HttpSession session) {
+		System.out.println(friend);
+		userService.addFriend(friend, session);
+		return "redirect:/professionalProfile";
+	}
+	
+
+
+}
